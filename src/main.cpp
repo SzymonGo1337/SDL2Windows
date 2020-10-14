@@ -8,6 +8,12 @@ int main(int argc, char* argv[]) {
 
     bool isOpen;
 
+    SDL_Rect r;
+    r.x = 50;
+    r.y = 50;
+    r.w = 50;
+    r.h = 50;
+
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         std::cout << "SDL Init Error: " << SDL_GetError() << "\n";
         exit(EXIT_FAILURE);
@@ -26,16 +32,32 @@ int main(int argc, char* argv[]) {
                         case SDL_QUIT:
                             isOpen = false;
                             break;
+
+                        case SDL_KEYDOWN:
+                            switch (event.key.keysym.sym) {
+                            case SDLK_LEFT:
+                                r.x -= 4;
+                                break;
+
+                            case SDLK_RIGHT:
+                                r.x += 4;
+                                break;
+
+                            case SDLK_UP:
+                                r.y -= 4;
+                                break;
+
+                            case SDLK_DOWN:
+                                r.y += 4;
+                                break;
+
+                            }
+
+                            break;
                     }
 
                     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
                     SDL_RenderClear(renderer);
-
-                    SDL_Rect r;
-                    r.x = 50;
-                    r.y = 50;
-                    r.w = 50;
-                    r.h = 50;
 
                     SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
                     SDL_RenderFillRect(renderer, &r);
