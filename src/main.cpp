@@ -2,74 +2,42 @@
 #include <SDL2/SDL_image.h>
 #include <iostream>
 
+#include "window.hpp"
+
 int main(int argc, char* argv[]) {
-    SDL_Window* window = NULL;
-    SDL_Renderer* renderer = NULL;
-
-    bool isOpen;
-
-    SDL_Rect r;
-    r.x = 50;
-    r.y = 50;
-    r.w = 50;
-    r.h = 50;
-
-    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
-        std::cout << "SDL Init Error: " << SDL_GetError() << "\n";
+    if(SDL_Init(SDL_INIT_VIDEO) > 0) {
+        std::cout << "SDL2 Init Error | " << SDL_GetError() << "\n";
         exit(EXIT_FAILURE);
-    } else {
-        window = SDL_CreateWindow("Simple", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_SHOWN);
-        if(window == NULL) {
-            std::cout << "SDL Window Error: " << SDL_GetError() << "\n";
-            exit(EXIT_FAILURE);
-        } else {
-            renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-
-            while(isOpen) {
-                SDL_Event event;
-                while(SDL_PollEvent(&event) > 0) {
-                    switch (event.type) {
-                        case SDL_QUIT:
-                            isOpen = false;
-                            break;
-
-                        case SDL_KEYDOWN:
-                            switch (event.key.keysym.sym) {
-                            case SDLK_LEFT:
-                                r.x -= 4;
-                                break;
-
-                            case SDLK_RIGHT:
-                                r.x += 4;
-                                break;
-
-                            case SDLK_UP:
-                                r.y -= 4;
-                                break;
-
-                            case SDLK_DOWN:
-                                r.y += 4;
-                                break;
-
-                            }
-
-                            break;
-                    }
-
-                    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-                    SDL_RenderClear(renderer);
-
-                    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-                    SDL_RenderFillRect(renderer, &r);
-                    SDL_RenderPresent(renderer);
-
-                }
-            }
-        }
     }
 
-    SDL_DestroyWindow(window);
+    if(!IMG_Init(IMG_INIT_PNG)) {
+        std::cout << "SDL2 Image Init Error | " << SDL_GetError() << "\n";
+        exit(EXIT_FAILURE);
+    }
 
+    Window window("Simple", 1280, 720);
+
+    SDL_Texture* player = window.loadTexture("doGry.png");
+
+    bool isOpen = true;
+
+    SDL_Event event;
+
+    while(isOpen) {
+        while(SDL_PollEvent(&event)) {
+            if(event.type == SDL_QUIT) {
+                isOpen = false;
+            }
+        }
+
+        window.clear();
+
+        window.render(player);
+
+        window.display();
+    }
+
+    window.clean();
     SDL_Quit();
 
     return 0;
