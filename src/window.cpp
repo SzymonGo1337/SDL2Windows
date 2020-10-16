@@ -33,8 +33,20 @@ void Window::clear() {
     SDL_RenderClear(renderer);
 }
 
-void Window::render(SDL_Texture* txt) {
-    SDL_RenderCopy(renderer, txt, NULL, NULL);
+void Window::render(Entity& entity) {
+    SDL_Rect src;
+    src.x = entity.getCurrentFrame().x;
+    src.y = entity.getCurrentFrame().y;
+    src.w = entity.getCurrentFrame().w;
+    src.h = entity.getCurrentFrame().h;
+
+    SDL_Rect dst;
+    dst.x = entity.getX();
+    dst.y = entity.getY();
+    dst.w = entity.getCurrentFrame().w * 4;
+    dst.h = entity.getCurrentFrame().h * 4;
+
+    SDL_RenderCopy(renderer, entity.getTxt(), &src, &dst);
 }
 
 void Window::display() {

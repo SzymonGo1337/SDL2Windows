@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "window.hpp"
+#include "entity.hpp"
 
 int main(int argc, char* argv[]) {
     if(SDL_Init(SDL_INIT_VIDEO) > 0) {
@@ -17,7 +18,9 @@ int main(int argc, char* argv[]) {
 
     Window window("Simple", 1280, 720);
 
-    SDL_Texture* player = window.loadTexture("doGry.png");
+    SDL_Texture* grass = window.loadTexture("grass.png");
+
+    Entity platform0(100, 100, grass);
 
     bool isOpen = true;
 
@@ -32,7 +35,7 @@ int main(int argc, char* argv[]) {
 
         window.clear();
 
-        window.render(player);
+        window.render(platform0);
 
         window.display();
     }
